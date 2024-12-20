@@ -1,0 +1,65 @@
+# Given Sales Price Records
+sales_prices <- c(5, 10, 11, 13, 15, 35, 50, 55, 72, 92, 204, 215)
+
+# (a) Equal-Frequency (Equi-Depth) Partitioning
+sorted_prices <- sort(sales_prices)
+bin_size <- length(sorted_prices) / 3
+
+# Divide into three bins, each with four records
+bin1 <- sorted_prices[1:bin_size]
+bin2 <- sorted_prices[(bin_size + 1):(2 * bin_size)]
+bin3 <- sorted_prices[(2 * bin_size + 1):length(sorted_prices)]
+
+cat("Equal-Frequency Bins:\n")
+cat("Bin 1:", bin1, "\n")
+cat("Bin 2:", bin2, "\n")
+cat("Bin 3:", bin3, "\n\n")
+
+# (b) Equal-Width Partitioning
+min_value <- min(sales_prices)
+max_value <- max(sales_prices)
+range_width <- (max_value - min_value) / 3
+
+# Define bin edges
+bin_edges <- c(min_value, min_value + range_width, min_value + 2 * range_width, max_value)
+
+# Assign records to bins
+bin1_width <- sales_prices[sales_prices >= bin_edges[1] & sales_prices < bin_edges[2]]
+bin2_width <- sales_prices[sales_prices >= bin_edges[2] & sales_prices < bin_edges[3]]
+bin3_width <- sales_prices[sales_prices >= bin_edges[3] & sales_prices <= bin_edges[4]]
+
+cat("Equal-Width Bins:\n")
+cat("Bin 1:", bin1_width, "\n")
+cat("Bin 2:", bin2_width, "\n")
+cat("Bin 3:", bin3_width, "\n")
+clustering_partition <- function(data, clusters) {
+  kmeans_result <- kmeans(data, centers = clusters)
+  split(data, kmeans_result$cluster)
+}
+cat("\nClustering Partitioning:\n")
+print(clustering_partition(sales_prices, 3))
+
+
+
+
+Output
+
+Equal-Frequency Bins:
+Bin 1: 5 10 11 13 
+Bin 2: 15 35 50 55 
+Bin 3: 72 92 204 215 
+
+Equal-Width Bins:
+Bin 1: 5 10 11 13 15 35 50 55 72 
+Bin 2: 92 
+Bin 3: 204 215 
+
+Clustering Partitioning:
+$`1`
+[1] 50 55 72 92
+
+$`2`
+[1]  5 10 11 13 15 35
+
+$`3`
+[1] 204 215
